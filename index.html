@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Todo list</title>
+    <link rel="stylesheet" href="src/todo.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="src/todo.js"></script>
+  </head>
+  <body>
+
+    <div id="Todolist_content">
+
+
+      <div id="Todolist_todo_container">
+
+        <h1 id = "logo">Todo List</h1>
+        <div id="list"></div>
+
+      </div>
+
+
+      <div id="Todolist_entry_container">
+
+        <form id="todo"  method="post">
+        新しいTodoの追加:
+        <input id ="formText" type="text" name="todo" value="" size="20" maxlength="20">
+        <input id = "SubmitButton" type="submit" value="submit">
+        <input id=  "AllclearButton" type="submit" value="Allclear">
+        </form>
+
+      </div>
+
+    </div>
+
+
+  </body>
+</html>
