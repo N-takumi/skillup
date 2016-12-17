@@ -4,6 +4,7 @@ function todolist(){
   var APP_VERSION = 0.1;//バージョン
 
   var todolist_h = [];//todo保存用　配列
+  var count = 0;
 
   function init(){
 
@@ -24,6 +25,21 @@ function todolist(){
       showText();
     });
 
+    //チェックボックスクリック時の状態保存
+    $(".CheckBox").click(
+    function(){
+      console.log(this.id);
+
+      if($(this).prop('checked')){
+        todolist_h[this.id][1] = true;
+      }else{
+        todolist_h[this.id][1] = false;
+      }
+
+      localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
+    });
+
+
   }
 
   //Todoの読み込み及び表示
@@ -38,18 +54,22 @@ function todolist(){
         var list = $("#list");
         list.children().remove();
 
-        var value,html = [];
+        var value,html = [],isCheck;
         //ローカルストレージに保存されたTodo全てを要素に追加する
         if(todolist_h.length != 0){
           for(var i = todolist_h.length-1;i >= 0;i--){
 
-            value = todolist_h[i];
+            value = todolist_h[i][0];
+            isCheck = todolist_h[i][1];
 
             //表示する前にエスケープ
-            html.push($("<h5>").html("・"+escapeText(value)));
+            html.push($("<li>").html("<input class='CheckBox' id ="+i+" type='checkbox'/>"+escapeText(value)));
+            list.append(html);
+            $("#"+i).prop('checked',isCheck);
           }
-          list.append(html);
+
         }
+
       }else{
         todolist_h = [];
       }
@@ -57,7 +77,6 @@ function todolist(){
 
   //テキストの保存
   function saveText(){
-
     //ローカルストレージからJSON形式→配列で取得
     todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
 
@@ -66,12 +85,11 @@ function todolist(){
     }
 
     var text = $("#formText");//フォームからテキスト取得
-    var val = text.val();
 
-
+    var val = [text.val(),false];//二次元配列に変更　12/17   *******
 
     //入力チェックを行う
-    if(checkText(val)){
+    if(checkText(val[0])){
       //通ればセット
       todolist_h.push(val);
       localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
@@ -103,17 +121,19 @@ function todolist(){
     var value;
     if(todolist_h.length != 0){
       for(var i = 0;i < todolist_h.length;i++){
-        value = todolist_h[i];
+        value = todolist_h[i][0];
         if(text == value){
           alert("同じ内容のTodoが存在します");
           return false;
         }
       }
     }
-
-
     //全てのチェックを通過できれば可
     return true;
+  }
+
+  //チェックボックスのtrueチェック・localStorageからの削除
+  function check_checkbox(){
 
   }
 

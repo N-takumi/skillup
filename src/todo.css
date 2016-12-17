@@ -26,6 +26,12 @@ html{
   width: 100%;
 }
 
+
+
+#formText{
+  font-size: 20pt;
+}
+
 #Todolist_entry_container{
   position: fixed;
   bottom: 0;

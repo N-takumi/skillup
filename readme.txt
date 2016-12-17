@@ -18,4 +18,6 @@ Todo リスト
 動作環境:
 Google Chrome
 
-todolist_h = ["読書","スポーツ"];
+
+localStorageに配列で情報を保存
+[["課題",true],["report",]]
