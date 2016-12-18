@@ -22,12 +22,15 @@ function todolist(){
     $("#AllclearButton").click(
     function(){
       console.log("ALLclear!");
-      clearText();
+      if(window.confirm("保存されているTodoを全て削除しますか?")){
+        clearText();
+      }
     });
 
     //チェックボックスクリック時の状態保存
     $(document).on('click','.CheckBox',function(){//動的に生成されたものはこの記法で書く
       console.log(this.id);
+
       if($(this).prop('checked')){
         todolist_h[this.id][1] = true;
       }else{
@@ -35,26 +38,36 @@ function todolist(){
       }
 
       localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
+      showText();
     });
 
     //完了ボタンクリック時の処理
     $("#completion").click(
     function(){
 
-        todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
         var h = [];
-      if(window.confirm("完了したTodoを削除しますか?")){
+        var checkCount = 0;
+        var isCheck;
+
+        todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
         for(var i = 0;i < todolist_h.length;i++){
-
-          if(todolist_h[i][1]== false){
-          h.push(todolist_h[i]);
-          }
-
-
+          isCheck = todolist_h[i][1];//チェックボックスの状態を格納
+          if(isCheck == true)checkCount++;
         }
-        localStorage.setItem(APP_NAME,JSON.stringify(h));
+
+      if(checkCount > 0){
+          if(window.confirm("完了したTodoを削除しますか?")){
+            for(var i = 0;i < todolist_h.length;i++){
+
+            if(todolist_h[i][1]== false){
+            h.push(todolist_h[i]);
+            }
+
+            }
+            localStorage.setItem(APP_NAME,JSON.stringify(h));
+          }
       }else{
-        console.log("yeah");
+        alert("現在完了したTodoはありません");
       }
 
       showText();
@@ -63,13 +76,17 @@ function todolist(){
 
 
 
+
   }
 
   //Todoの読み込み及び表示
   function showText(){
 
+      var checkCount = 0;//完了Todoの数を入れる
+
       //ローカルストレージからJSON形式→配列で取得
       todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
+
 
       if(todolist_h != null){
 
@@ -83,15 +100,21 @@ function todolist(){
           for(var i = todolist_h.length-1;i >= 0;i--){
 
             value = todolist_h[i][0];//テキストを格納
+            year = todolist_h[i][2];//追加年
+            month = todolist_h[i][3];
+            day = todolist_h[i][4];
+            week = todolist_h[i][5];
 
             //表示する前にエスケープ
-            html.push($("<li class = 'todo'>").html("<input class='CheckBox' id ="+i+" type='checkbox'/>"+"  "+i+escapeText(value)));
+            html.push($("<li class = 'todo'>").html("<input class='CheckBox' id ="+i+" type='checkbox'/>"+"  "+(i+1)+escapeText(value)
+             +("<h5>追加日時:"+year+"年　"+month+"/"+day+" ("+week+")"+"</h5>")));
           }
         }
         list.append(html);
 
         for(var i = 0;i < todolist_h.length;i++){
           isCheck = todolist_h[i][1];//チェックボックスの状態を格納
+          if(isCheck == true)checkCount++;
           $("#"+i).prop('checked',isCheck);
         }
 
@@ -99,13 +122,26 @@ function todolist(){
         todolist_h = [];
       }
 
+      $("#compTodo_text").text("のこりTodo数:　"+checkCount+"/"+todolist_h.length);//Todo数更新
+      $("progress").attr('value',(checkCount/todolist_h.length)*100);//プログレスバー更新
+
       console.log("showText!");
   }
 
   //テキストの保存
   function saveText(){
+
     //ローカルストレージからJSON形式→配列で取得
     todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
+
+    //現在時刻を取得
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth()+1;
+    var day = now.getDate();
+    var week = now.getDay();
+
+    var weekName = ["日","月","火","水","木","金"];//曜日名配列
 
     if(todolist_h == null){
       todolist_h = [];
@@ -113,7 +149,7 @@ function todolist(){
 
     var text = $("#formText");//フォームからテキスト取得
 
-    var val = [text.val(),false];//二次元配列に変更　12/17   *******
+    var val = [text.val(),false,year,month,day,weekName[week]];
 
     //入力チェックを行う
     if(checkText(val[0])){
@@ -139,12 +175,11 @@ function todolist(){
     if(0 == text.length){
       alert("Todoが入力されていません");
       return false;
-    }else if(30 < text.length){
-      alert("文字数は30文字以下にしてください");
+    }else if(20 < text.length){
+      alert("文字数は20文字以下にしてください");
       return false;
     }
 
-    //すでに入力された値があれば不可//   書き換える必要がある
     var value;
     if(todolist_h.length != 0){
       for(var i = 0;i < todolist_h.length;i++){
