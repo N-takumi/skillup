@@ -4,7 +4,6 @@ function todolist(){
   var APP_VERSION = 0.1;//バージョン
 
   var todolist_h = [];//todo保存用　配列
-  var count = 0;
 
   function init(){
 
@@ -14,6 +13,7 @@ function todolist(){
     //Submitボタンクリック時の処理
     $("#SubmitButton").click(
     function(){
+      console.log("submit!");
       saveText();
       showText();
     });
@@ -21,15 +21,13 @@ function todolist(){
     //Allclearボタンクリック時の処理
     $("#AllclearButton").click(
     function(){
+      console.log("ALLclear!");
       clearText();
-      showText();
     });
 
     //チェックボックスクリック時の状態保存
-    $(".CheckBox").click(
-    function(){
+    $(document).on('click','.CheckBox',function(){//動的に生成されたものはこの記法で書く
       console.log(this.id);
-
       if($(this).prop('checked')){
         todolist_h[this.id][1] = true;
       }else{
@@ -38,6 +36,31 @@ function todolist(){
 
       localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
     });
+
+    //完了ボタンクリック時の処理
+    $("#completion").click(
+    function(){
+
+        todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
+        var h = [];
+      if(window.confirm("完了したTodoを削除しますか?")){
+        for(var i = 0;i < todolist_h.length;i++){
+
+          if(todolist_h[i][1]== false){
+          h.push(todolist_h[i]);
+          }
+
+
+        }
+        localStorage.setItem(APP_NAME,JSON.stringify(h));
+      }else{
+        console.log("yeah");
+      }
+
+      showText();
+      console.log("hello");
+    });
+
 
 
   }
@@ -48,7 +71,7 @@ function todolist(){
       //ローカルストレージからJSON形式→配列で取得
       todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
 
-      if(todolist_h){
+      if(todolist_h != null){
 
         //既にある要素を削除
         var list = $("#list");
@@ -59,20 +82,24 @@ function todolist(){
         if(todolist_h.length != 0){
           for(var i = todolist_h.length-1;i >= 0;i--){
 
-            value = todolist_h[i][0];
-            isCheck = todolist_h[i][1];
+            value = todolist_h[i][0];//テキストを格納
 
             //表示する前にエスケープ
-            html.push($("<li>").html("<input class='CheckBox' id ="+i+" type='checkbox'/>"+escapeText(value)));
-            list.append(html);
-            $("#"+i).prop('checked',isCheck);
+            html.push($("<li class = 'todo'>").html("<input class='CheckBox' id ="+i+" type='checkbox'/>"+"  "+i+escapeText(value)));
           }
+        }
+        list.append(html);
 
+        for(var i = 0;i < todolist_h.length;i++){
+          isCheck = todolist_h[i][1];//チェックボックスの状態を格納
+          $("#"+i).prop('checked',isCheck);
         }
 
       }else{
         todolist_h = [];
       }
+
+      console.log("showText!");
   }
 
   //テキストの保存
@@ -110,7 +137,7 @@ function todolist(){
 
     //文字数チェック
     if(0 == text.length){
-      alert("Todoが入力されていません")
+      alert("Todoが入力されていません");
       return false;
     }else if(30 < text.length){
       alert("文字数は30文字以下にしてください");
@@ -132,10 +159,6 @@ function todolist(){
     return true;
   }
 
-  //チェックボックスのtrueチェック・localStorageからの削除
-  function check_checkbox(){
-
-  }
 
   //HTMLタグのエスケープ処理
   function escapeText(text){

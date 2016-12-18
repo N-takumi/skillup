@@ -26,10 +26,29 @@ html{
   width: 100%;
 }
 
+#logo{
+  text-align: center;
+}
+
+#completion{
+  
+}
+
+#list{
+  background-color: darkgray;
+  font-weight: bold;
+  font-size: 20pt;
+}
+
+.CheckBox{
+  height: 20pt;
+  border: 2px solid black;
+}
 
 
 #formText{
   font-size: 20pt;
+  border: 2px solid black;
 }
 
 #Todolist_entry_container{
