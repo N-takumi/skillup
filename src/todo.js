@@ -21,8 +21,8 @@ function todolist(){
     //Allclearボタンクリック時の処理
     $("#AllclearButton").click(
     function(){
-      console.log("ALLclear!");
-      if(window.confirm("保存されているTodoを全て削除しますか?")){
+      todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
+      if(window.confirm("保存されているTodo"+todolist_h.length+"つを全て削除しますか?")){
         clearText();
       }
     });
@@ -56,7 +56,7 @@ function todolist(){
         }
 
       if(checkCount > 0){
-          if(window.confirm("完了したTodoを削除しますか?")){
+          if(window.confirm("完了したTodo"+checkCount+"つを削除しますか?")){
             for(var i = 0;i < todolist_h.length;i++){
 
             if(todolist_h[i][1]== false){
@@ -67,13 +67,15 @@ function todolist(){
             localStorage.setItem(APP_NAME,JSON.stringify(h));
           }
       }else{
-        alert("現在完了したTodoはありません");
+        alert("現在完了しているTodoはありません");
       }
 
       showText();
       console.log("hello");
     });
 
+    //フッターのバージョン更新
+    $("#footer").text(APP_NAME+"var."+APP_VERSION+"　　");
 
 
 
@@ -94,20 +96,25 @@ function todolist(){
         var list = $("#list");
         list.children().remove();
 
-        var value,html = [],isCheck;
+        var value,html = [],isCheck,className;
         //ローカルストレージに保存されたTodo全てを要素に追加する
         if(todolist_h.length != 0){
           for(var i = todolist_h.length-1;i >= 0;i--){
-
+            className = "todo";//クラス名初期化
             value = todolist_h[i][0];//テキストを格納
-            year = todolist_h[i][2];//追加年
-            month = todolist_h[i][3];
-            day = todolist_h[i][4];
-            week = todolist_h[i][5];
+            var year = todolist_h[i][2];//追加年
+            var month = todolist_h[i][3];
+            var day = todolist_h[i][4];
+            var week = todolist_h[i][5];
+
+            if(todolist_h[i][1]){
+              className = "todo_checked";//チェック時の初期化
+            }
 
             //表示する前にエスケープ
-            html.push($("<li class = 'todo'>").html("<input class='CheckBox' id ="+i+" type='checkbox'/>"+"  "+(i+1)+escapeText(value)
-             +("<h5>追加日時:"+year+"年　"+month+"/"+day+" ("+week+")"+"</h5>")));
+            html.push($('<li class = '+className+'>').html("<div><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+escapeText(value)+"</span>"
+                     +("</br><span id = 'todo_time'>   追加日時:"+year+"年　"+month+"/"+day
+                     +" ("+week+")"+"</span></div>")));
           }
         }
         list.append(html);
@@ -148,6 +155,7 @@ function todolist(){
     }
 
     var text = $("#formText");//フォームからテキスト取得
+  
 
     var val = [text.val(),false,year,month,day,weekName[week]];
 

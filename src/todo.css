@@ -1,4 +1,4 @@
-html,body,p,div,h1,h2,h5,li{
+html,body,p,div,h1,h2,h5,ul,li{
   height: 100%;
   width: 100%;
   padding: 0;
@@ -15,7 +15,7 @@ progress{
 
 #Todolist_content{
   font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', "メイリオ", Meiryo,'ＭＳ Ｐゴシック', 'MS PGothic', 'IPAPGothic', Helvetica, sans-serif;
-  background-color: #004d00;
+  background-color: rgba(29,84,63,1);
   height: auto;
   min-height: 100%;
   width: 100%;
@@ -23,10 +23,10 @@ progress{
 
 
 #Todolist_todo_container{
-  color:white;
-  background-color: #004d00;
+  color:rgba(255,255,255,0.85);
+  background-color: rgba(29,84,63,1);
   height: auto;
-  min-height: 150vh;
+  min-height: 130vh;
   width: 100%;
 }
 
@@ -34,18 +34,48 @@ progress{
   text-align: center;
 }
 
-#completion{
+#compTodo_text{
+  display: inline-block;
+}
 
+#statusBox{
+  display: block;
+  width: 50%;
+  margin:2%;
 }
 
 #list{
+  width: 60%;
+  margin: 2% 2% 10vh 2%;
+}
+
+.todo{
   background-color: darkgray;
-  font-weight: bold;
+}
+.todo_checked{
+  background-color: gray;
+}
+
+#todo_title{
   font-size: 20pt;
+  font-weight: bold;
+}
+#todo_time{
+  font-size: 13pt;
+  font-weight: lighter;
 }
 
 li{
-  padding: 1vh,0;
+  width: auto;
+  display: block;
+  border: 4px solid black;
+  border-radius: 3em .7em 2em .7em/.7em 2em .7em 3em;
+  box-sizing: border-box;
+  padding: 1%;
+  margin: 6px 0;
+}
+
+li:hover{
 }
 
 .CheckBox{
@@ -55,7 +85,11 @@ li{
 
 
 #formText{
-  font-size: 20pt;
+  font-size: 15pt;
+  border: 2px solid black;
+}
+
+#formLimit{
   border: 2px solid black;
 }
 
@@ -63,7 +97,18 @@ li{
   position: fixed;
   bottom: 0;
   background-color: #8b4513;
-  height: 20vh;
+  height: 10vh;
   width: 100%;
-  border-top: 2px solid black;
+  border-top: 4px solid black;
+}
+
+#Todolist_entry_form{
+  padding: 1%;
+  height: 3vh;
+}
+
+#footer{
+  color: gray;
+  height: 4vh;
+  text-align: right;
 }
