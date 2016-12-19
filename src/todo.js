@@ -102,19 +102,24 @@ function todolist(){
           for(var i = todolist_h.length-1;i >= 0;i--){
             className = "todo";//クラス名初期化
             value = todolist_h[i][0];//テキストを格納
-            var year = todolist_h[i][2];//追加年
-            var month = todolist_h[i][3];
-            var day = todolist_h[i][4];
-            var week = todolist_h[i][5];
+
+            var year = todolist_h[i][2][0];//追加年
+            var month = todolist_h[i][2][1];//月
+            var day = todolist_h[i][2][2];//日
+
+            var liyear = todolist_h[i][3][0];//指定年
+            var limonth = todolist_h[i][3][1];//月
+            var liday = todolist_h[i][3][2];//日
 
             if(todolist_h[i][1]){
               className = "todo_checked";//チェック時の初期化
             }
 
             //表示する前にエスケープ
-            html.push($('<li class = '+className+'>').html("<div><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+escapeText(value)+"</span>"
-                     +("</br><span id = 'todo_time'>   追加日時:"+year+"年　"+month+"/"+day
-                     +" ("+week+")"+"</span></div>")));
+            html.push($('<li  class = '+className+'>').html("<div><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+escapeText(value)+"</span>"
+                     +("</br><span id = 'todo_time'> 追加日時:"+year+"年　"+month+"月"+day
+                     +"日"+"</span></br><span id = 'limit_time'>締切日時:"+liyear+"年 "+limonth
+                     +"月"+liday+"日"+"</span></div>")));
           }
         }
         list.append(html);
@@ -141,6 +146,10 @@ function todolist(){
     //ローカルストレージからJSON形式→配列で取得
     todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
 
+    if(todolist_h == null){//存在しない場合は作成する
+      todolist_h = [];
+    }
+
     //現在時刻を取得
     var now = new Date();
     var year = now.getFullYear();
@@ -148,19 +157,16 @@ function todolist(){
     var day = now.getDate();
     var week = now.getDay();
 
-    var weekName = ["日","月","火","水","木","金"];//曜日名配列
 
-    if(todolist_h == null){
-      todolist_h = [];
-    }
+    var nowDate = [year,month,day];//現在時刻を一つの配列にまとめる
 
     var text = $("#formText");//フォームからテキスト取得
-  
+    var limitDate = $("#formLimit").val().split("-");//指定日時取得(yyyy-mmmm-ddddから配列に変換)
 
-    var val = [text.val(),false,year,month,day,weekName[week]];
+    var val = [text.val(),false,nowDate,limitDate];//localStorageに入れる形で格納
 
     //入力チェックを行う
-    if(checkText(val[0])){
+    if(checkData(val[0],nowDate,limitDate)){
       //通ればセット
       todolist_h.push(val);
       localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
@@ -176,8 +182,8 @@ function todolist(){
   }
 
 
-  //入力された文字をチェック
-  function checkText(text){
+  //入力されたテキスト・指定日時をエラーチェック
+  function checkData(text,nowDate,limitDate){
 
     //文字数チェック
     if(0 == text.length){
@@ -198,6 +204,25 @@ function todolist(){
         }
       }
     }
+
+    //指定日時チェック(追加日時より前の日時を選択していないか)
+    if(limitDate[0] == undefined || limitDate[1] == undefined){
+        alert("指定日時が入力されていません");
+          return false;
+      }else if((limitDate[0] < nowDate[0]) || (limitDate[0] == nowDate[0] && limitDate[1] < nowDate[1]) ||
+        (limitDate[0] == nowDate[0] && limitDate[1] == nowDate[1] && limitDate[2] < nowDate[2])){
+        alert("指定日時が既に過ぎています");
+        return false;
+      }else if((limitDate[0]==nowDate[0] && limitDate[1]==nowDate[1] && limitDate[2] == nowDate[2])){
+        if(window.confirm("指定日時が今日ですが登録しますか?")){
+          return true;
+        }else{
+          return false;
+        }
+      }
+
+
+
     //全てのチェックを通過できれば可
     return true;
   }
