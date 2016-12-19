@@ -13,18 +13,21 @@
     <div id="Todolist_content">
 
 
-      <div id="Todolist_todo_container">
+      <div id="header">
+        <h2 id = "logo">Todo List</h2>
+      </div>
 
-        <h1 id = "logo">Todo List</h1>
+      <div id="Todolist_todo_container">
 
         <div id="statusBox">
           <h2 id = "compTodo_text">現在のTodo:</h2>
           <progress max = "100"></progress>
-          <input id ="completion" type="submit" value="完了">
+          <input id ="completion" type="submit" value="Todoを完了する">
         </div>
+        <span id = "enptyStr"><h4>下のエントリーフォームからTodoを登録してね!<br>ここにTodoが溜まっていくよ!　↓↓↓<br><br>※Safari・Firefoxをご使用の方は <br>期限を yyyy-mmmm-dddd形式で入力してください</h4></span>
+        <ul id="list">
 
-
-        <ul id="list"></ul>
+        </ul>
 
       </div>
 
@@ -32,11 +35,11 @@
       <div id="Todolist_entry_container">
 
         <form id="Todolist_entry_form"  method="post">
-        　＋:
-        <input id ="formText" type="text" name="todo" value=""placeholder="新しいTODOを追加" size="20" maxlength="20">
+        <input id ="formText" type="text" name="todo" value=""placeholder="Todo名" size="20" maxlength="20">
+        期限:
         <input id ="formLimit" type="date" size ="20">
-        <input id = "SubmitButton" type="submit" value="submit">
-        <input id=  "AllclearButton" type="submit" value="Allclear">
+        <input id = "SubmitButton" type="submit" value="追加">
+        <input id=  "AllclearButton" type="submit" value="Todoを全て削除">
         </form>
 
         <div id="footer">

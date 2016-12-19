@@ -10,6 +10,9 @@ function todolist(){
     //ローカルストレージ内のTodoを読み込む
     showText();
 
+    //
+
+
     //Submitボタンクリック時の処理
     $("#SubmitButton").click(
     function(){
@@ -22,7 +25,10 @@ function todolist(){
     $("#AllclearButton").click(
     function(){
       todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
-      if(window.confirm("保存されているTodo"+todolist_h.length+"つを全て削除しますか?")){
+
+      if(todolist_h.length == 0 || todolist_h == null){
+        alert("現在Todoは保存されていません");
+      }else if(window.confirm("保存されているTodo"+todolist_h.length+"つを全て削除しますか?")){
         clearText();
       }
     });
@@ -36,6 +42,22 @@ function todolist(){
       }else{
         todolist_h[this.id][1] = false;
       }
+
+      localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
+      showText();
+    });
+
+    //メモ保存ボタンクリック時の状態保存
+    $(document).on('click','.memoSave',function(){
+      console.log("hello");
+      var id = (this.id);
+
+      console.log(id);
+
+      var str = $("#Amemo"+id).val();
+      todolist_h[this.id][4] = str;
+
+      console.log(str);
 
       localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
       showText();
@@ -90,6 +112,7 @@ function todolist(){
       todolist_h = JSON.parse(localStorage.getItem(APP_NAME));
 
 
+
       if(todolist_h != null){
 
         //既にある要素を削除
@@ -116,25 +139,37 @@ function todolist(){
             }
 
             //表示する前にエスケープ
-            html.push($('<li  class = '+className+'>').html("<div><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+escapeText(value)+"</span>"
-                     +("</br><span id = 'todo_time'> 追加日時:"+year+"年　"+month+"月"+day
-                     +"日"+"</span></br><span id = 'limit_time'>締切日時:"+liyear+"年 "+limonth
-                     +"月"+liday+"日"+"</span></div>")));
+            html.push($('<li  class = '+className+'>').html("<div id = 'todoText'><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+escapeText(value)+"</span>"
+                     +("<span id='time'><span id = 'limit_time'>締切日時:"+liyear+"年  "+limonth
+                     +"月"+liday+"日"+"</span></br><span id = 'todo_time'> 追加日時:"+year+"年 "+month+"月"+day
+                     +"日"+"</span></span></div><span id = 'memo'><span class ='memoForm'>メモ ▽ <input "
+                     +" id = "+i+" class='memoSave' type='submit'  value = '保存'/></br><span id='memoPad'>"
+                     +"<textarea id = "+"Amemo"+i+"></textarea></span></span></br>"
+                     +"</span>")));
           }
         }
         list.append(html);
 
         for(var i = 0;i < todolist_h.length;i++){
           isCheck = todolist_h[i][1];//チェックボックスの状態を格納
+          memo = todolist_h[i][4];//メモの状態を格納
           if(isCheck == true)checkCount++;
           $("#"+i).prop('checked',isCheck);
+          $("#Amemo"+i).prop('value',memo);
         }
 
       }else{
         todolist_h = [];
       }
 
-      $("#compTodo_text").text("のこりTodo数:　"+checkCount+"/"+todolist_h.length);//Todo数更新
+      //Todoが一つもない時、メッセージを表示
+      if(todolist_h.length == 0){
+        $("#enptyStr").css({
+          "display":"block"
+        });
+      }
+
+      $("#compTodo_text").text("残りTodo数:　"+checkCount+"/"+todolist_h.length);//Todo数更新
       $("progress").attr('value',(checkCount/todolist_h.length)*100);//プログレスバー更新
 
       console.log("showText!");
@@ -163,16 +198,17 @@ function todolist(){
     var text = $("#formText");//フォームからテキスト取得
     var limitDate = $("#formLimit").val().split("-");//指定日時取得(yyyy-mmmm-ddddから配列に変換)
 
-    var val = [text.val(),false,nowDate,limitDate];//localStorageに入れる形で格納
+    var val = [text.val(),false,nowDate,limitDate," "];//localStorageに入れる形で格納
 
     //入力チェックを行う
     if(checkData(val[0],nowDate,limitDate)){
       //通ればセット
       todolist_h.push(val);
       localStorage.setItem(APP_NAME,JSON.stringify(todolist_h));
+      //テキストボックスをからにする
+      text.val("");
     }
-    //テキストボックスをからにする
-    text.val("");
+
   }
 
   //Todoのクリア

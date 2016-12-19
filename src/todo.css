@@ -1,4 +1,4 @@
-html,body,p,div,h1,h2,h5,ul,li{
+html,body,p,div,h1,h2,h3,h4,h5,ul,li{
   height: 100%;
   width: 100%;
   padding: 0;
@@ -21,6 +21,13 @@ progress{
   width: 100%;
 }
 
+#header{
+  height: 5vh;
+  background-color: gray;
+  position: fixed;
+  border-bottom: 4px solid black;
+}
+
 
 #Todolist_todo_container{
   color:rgba(255,255,255,0.85);
@@ -28,6 +35,7 @@ progress{
   height: auto;
   min-height: 130vh;
   width: 100%;
+  padding-top: 5vh;
 }
 
 #logo{
@@ -44,6 +52,17 @@ progress{
   margin:2%;
 }
 
+#enptyStr{
+  width: 60%;
+  display: none;
+  border: 4px solid black;
+  border-radius: 3em .7em 2em .7em/.7em 2em .7em 3em;
+  box-sizing: border-box;
+  padding: 1%;
+  margin: 2% 2% 10vh 2%;
+  background-color: darkgray;
+}
+
 #list{
   width: 60%;
   margin: 2% 2% 10vh 2%;
@@ -57,11 +76,11 @@ progress{
 }
 
 #todo_title{
-  font-size: 20pt;
+  font-size: 24pt;
   font-weight: bold;
 }
-#todo_time{
-  font-size: 13pt;
+#time{
+  font-size: 12pt;
   font-weight: lighter;
 }
 
@@ -82,6 +101,34 @@ li:hover{
   height: 20pt;
   border: 2px solid black;
 }
+
+#todoText{
+  display: inline-block;
+  width: auto;
+}
+
+#DOMtext{
+  display: inline-block;
+  width: 60%;
+}
+
+#time{
+  display: inline-block;
+  margin: 0 0 0 10%;
+}
+
+#memo{
+  display: inline-block;
+}
+
+.memoForm{
+  padding: 3%;
+  background-color: gray;
+  border-radius: 3em .7em 5em .7em/.7em 2em .7em 3em ;
+  border: 2px solid black;
+  display: inline-block;
+}
+
 
 
 #formText{
