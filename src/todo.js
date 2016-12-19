@@ -139,7 +139,7 @@ function todolist(){
             }
 
             //表示する前にエスケープ
-            html.push($('<li  class = '+className+'>').html("<div id = 'todoText'><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+escapeText(value)+"</span>"
+            html.push($('<li  class = '+className+'>').html("<div id = 'todoText'><input class='CheckBox' id ="+i+" type='checkbox'/>"+"<span id ='todo_title'>"+" "+escapeText(value)+"</span>"
                      +("<span id='time'><span id = 'limit_time'>締切日時:"+liyear+"年  "+limonth
                      +"月"+liday+"日"+"</span></br><span id = 'todo_time'> 追加日時:"+year+"年 "+month+"月"+day
                      +"日"+"</span></span></div><span id = 'memo'><span class ='memoForm'>メモ ▽ <input "
@@ -162,14 +162,31 @@ function todolist(){
         todolist_h = [];
       }
 
+      var busyStr  = "";
+
       //Todoが一つもない時、メッセージを表示
       if(todolist_h.length == 0){
         $("#enptyStr").css({
           "display":"block"
         });
+        busyStr = "忙がしくない";
       }
 
-      $("#compTodo_text").text("残りTodo数:　"+checkCount+"/"+todolist_h.length);//Todo数更新
+      if(0 < todolist_h.length && todolist_h.length < 5){
+        busyStr = "ちょっと忙しい";
+      }else if(5 < todolist_h.length && todolist_h.length < 10){
+        busyStr = "割と忙しい";
+      }else if(11 < todolist_h.length && todolist_h.length < 15){
+        busyStr = "忙しい!!";
+      }else if(15 < todolist_h.length && todolist_h.length < 20){
+        busyStr = "めっちゃ忙しい!!";
+      }else if(20 < todolist_h.length && todolist_h.length < 30){
+        busyStr = "めちゃくちゃ忙しい!!";
+      }
+
+
+      $("#compTodo_text").html("残りTodo数:　<span id = 'checkCount'>"+checkCount+"/"+todolist_h.length+
+      "</span>"+"      忙しい度:<span id = 'busyStr'>"+busyStr+"</span>");//Todo数/忙しい度更新
       $("progress").attr('value',(checkCount/todolist_h.length)*100);//プログレスバー更新
 
       console.log("showText!");
@@ -225,8 +242,8 @@ function todolist(){
     if(0 == text.length){
       alert("Todoが入力されていません");
       return false;
-    }else if(20 < text.length){
-      alert("文字数は20文字以下にしてください");
+    }else if(15 < text.length){
+      alert("文字数は15文字以下にしてください");
       return false;
     }
 
