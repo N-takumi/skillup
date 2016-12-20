@@ -1,5 +1,5 @@
 #!/bin/sh
-echo ".DS_Storeを抹殺します"
+echo ".DS_Storeを削除します"
 find ./ -name '*.DS_Store'
 
 find ./ -name '*.DS_Store' | xargs rm
