@@ -172,15 +172,15 @@ function todolist(){
         busyStr = "忙がしくない";
       }
 
-      if(0 < todolist_h.length && todolist_h.length < 5){
+      if(0 < todolist_h.length && todolist_h.length <= 5){
         busyStr = "ちょっと忙しい";
-      }else if(5 < todolist_h.length && todolist_h.length < 10){
+      }else if(5 < todolist_h.length && todolist_h.length <= 10){
         busyStr = "割と忙しい";
-      }else if(11 < todolist_h.length && todolist_h.length < 15){
+      }else if(10 < todolist_h.length && todolist_h.length <= 15){
         busyStr = "忙しい!!";
-      }else if(15 < todolist_h.length && todolist_h.length < 20){
+      }else if(15 < todolist_h.length && todolist_h.length <= 20){
         busyStr = "めっちゃ忙しい!!";
-      }else if(20 < todolist_h.length && todolist_h.length < 30){
+      }else if(20 < todolist_h.length && todolist_h.length <= 30){
         busyStr = "めちゃくちゃ忙しい!!";
       }
 
